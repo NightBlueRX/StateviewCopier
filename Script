@@ -1,0 +1,699 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stateview Line Copier</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #10131a;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 22px;
+}
+
+h1 {
+    text-align: center;
+    color: #48aaff;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #b8c3d6;
+    margin-bottom: 25px;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px auto 25px;
+    max-width: 900px;
+}
+
+.tab {
+    flex: 1;
+    max-width: 250px;
+    padding: 14px;
+    background: #1b202b;
+    border: 1px solid #38465d;
+    color: #c6d2e5;
+    font-size: 17px;
+    border-radius: 8px;
+}
+
+.tab.active {
+    background: #1687e8;
+    border-color: #1687e8;
+    color: white;
+}
+
+.panel {
+    display: none;
+    max-width: 900px;
+    margin: auto;
+}
+
+.panel.active {
+    display: block;
+}
+
+.panel h2 {
+    color: #48aaff;
+    margin-top: 0;
+}
+
+textarea {
+    display: block;
+    width: 100%;
+    min-height: 100px;
+    background: #1b202b;
+    color: white;
+    border: 1px solid #38465d;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 15px;
+    resize: vertical;
+}
+
+button {
+    background: #1687e8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.15s;
+}
+
+button:hover {
+    background: #086bc0;
+}
+
+.generate {
+    margin-top: 10px;
+    width: 100%;
+    padding: 13px;
+    font-size: 16px;
+}
+
+.line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #1b202b;
+    border: 1px solid #303b4d;
+    border-radius: 8px;
+    padding: 13px;
+    margin-bottom: 10px;
+}
+
+.line-text {
+    flex: 1;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+}
+
+.copy-status {
+    color: #70e6a1;
+    font-size: 13px;
+    min-height: 16px;
+}
+
+.count {
+    color: #b8c3d6;
+    font-size: 13px;
+    margin: 12px 0;
+}
+
+/* DRILL TIMER */
+
+.drill-timer {
+    background: #151a24;
+    border: 1px solid #1687e8;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0 25px;
+    box-shadow: 0 0 12px rgba(22, 135, 232, 0.12);
+}
+
+.drill-timer h3 {
+    color: #48aaff;
+    margin-top: 0;
+}
+
+.drill-timer p {
+    line-height: 1.5;
+    color: #d8e2f1;
+}
+
+.drill-timer hr {
+    border: none;
+    border-top: 1px solid #303b4d;
+    margin: 20px 0;
+}
+
+.timer-settings {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.timer-settings label {
+    color: #b8c3d6;
+}
+
+.timer-settings input {
+    width: 78px;
+    background: #10131a;
+    color: #ffffff;
+    border: 1px solid #38465d;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#timerDisplay {
+    font-size: clamp(42px, 9vw, 64px);
+    font-weight: bold;
+    color: #48aaff;
+    background: #0c1017;
+    border: 1px solid #303b4d;
+    border-radius: 8px;
+    text-align: center;
+    padding: 16px 10px;
+    margin: 18px 0;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 3px;
+}
+
+.timer-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.timer-buttons button {
+    flex: 1;
+    min-width: 90px;
+    padding: 12px;
+}
+
+#timerStatus {
+    color: #48aaff;
+    margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 12px;
+    }
+
+    .line {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .line button {
+        width: 100%;
+    }
+
+    .timer-settings {
+        align-items: center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<h1>Stateview Line Copier</h1>
+<p class="subtitle">Choose a tab, find your line, and click Copy.</p>
+
+<div class="tabs">
+    <button class="tab active" data-tab="shift">Shift</button>
+    <button class="tab" data-tab="training">Training</button>
+</div>
+
+<!-- SHIFT TAB -->
+<section id="shift" class="panel active">
+    <h2>Shift Line Copier</h2>
+
+    <textarea id="shiftInput"
+        placeholder="Add your own shift lines here. Put each line on a separate line."></textarea>
+
+    <button class="generate" onclick="addCustomLines('shift')">
+        Generate Copy Buttons
+    </button>
+
+    <p id="shiftStatus" class="copy-status"></p>
+    <p id="shiftCount" class="count"></p>
+
+    <div id="shiftOutput"></div>
+
+    <!-- DRILL TIMER -->
+    <div class="drill-timer">
+        <h3>Drill Duration Guide</h3>
+
+        <p><strong>Lockdown Drill:</strong> 4–6 minutes.</p>
+        <p><strong>Blackout Drill:</strong> 4–6 minutes.</p>
+        <p><strong>Evacuation Drill:</strong> 5–7 minutes.</p>
+
+        <hr>
+
+        <h3>Adjustable Drill Timer</h3>
+
+        <div class="timer-settings">
+            <label for="timerMinutes">Minutes:</label>
+            <input id="timerMinutes" type="number"
+                min="0" max="999" value="5">
+
+            <label for="timerSeconds">Seconds:</label>
+            <input id="timerSeconds" type="number"
+                min="0" max="59" value="0">
+        </div>
+
+        <div id="timerDisplay">05:00</div>
+
+        <div class="timer-buttons">
+            <button onclick="startTimer()">Start</button>
+            <button onclick="pauseTimer()">Pause</button>
+            <button onclick="resetTimer()">Reset</button>
+        </div>
+
+        <p id="timerStatus" aria-live="polite">Ready to start</p>
+    </div>
+</section>
+
+<!-- TRAINING TAB -->
+<section id="training" class="panel">
+    <h2>Training Line Copier</h2>
+
+    <textarea id="trainingInput"
+        placeholder="Add your own training lines here. Put each line on a separate line."></textarea>
+
+    <button class="generate" onclick="addCustomLines('training')">
+        Generate Copy Buttons
+    </button>
+
+    <p id="trainingStatus" class="copy-status"></p>
+    <p id="trainingCount" class="count"></p>
+
+    <div id="trainingOutput"></div>
+</section>
+
+<script>
+const shiftLines = [
+    // SHIFT RULES
+    "Before we begin, let’s go over a few rules to help you succeed in this shift!",
+    "I - Do not say PTS (Permission To Speak) while I am speaking.",
+    "II - Follow all orders given to you by a SI+ unless they ask you to break the rules.",
+    "III - If there is any problem, come to me, my Co-Host, or any other SI+ for assistance.",
+    "IV - Do not ask for promotions/ranks.",
+    "V - Use proper grammar at all times.",
+
+    // ROLE ASSIGNMENTS
+    "Before we start, my co-host will assign your roles. Please pay close attention, as your role will dictate your duties for the duration of this shift.",
+    "Does everybody have a role? [Yes/No]",
+    "Now that everyone has their roles, let’s review what each role entails:",
+    "Patrol Team: Responsible for patrolling the prison and monitoring its status. They ensure that all areas are secure and operational.",
+    "Scout Team: Patrols outside the prison and monitors the premises from watch towers, providing an external security layer.",
+    "Response Team: Handles situations around the set status, responds to any panic calls, and oversees checkpoints and the control room.",
+    "Camera Operator: Manages the cameras, providing real-time updates and reporting on prison activities via radio.",
+    "Captain: Leads a group, maintains control within their team, and ensures order and discipline are upheld.",
+
+    // DRILL INTRODUCTION
+    "At a random point during the shift, a drill will be conducted. It is crucial that you follow the procedures specific to the drill being carried out.",
+    "Please pay close attention as I explain the procedures for each drill:",
+
+    // DRILL PROCEDURES
+    "Lockdown Drill: When a Lockdown Drill is initiated, all attendees must escort inmates back to their cells. Ensure that all individuals remain within the cell-block for the duration of the drill.",
+    "Blackout Drill: When a Blackout Drill is initiated, all facility power will be shut off. Guards and inmates must remain inside the cell-block for the entire duration of the drill. Do not attempt to restore power until the procedure has officially concluded.",
+    "Evacuation Drill: When the Evacuation Drill starts, all attendees and inmates must proceed to the Maximum Security Yard and stand there. You must evacuate as soon as the alarm commences. Do not transfer inmates.",
+
+    // SHIFT EXPECTATIONS
+    "Before I dismiss you, here are a few expectations that we expect throughout the shift.",
+    "I - Communication: Use radio channel two to communicate.",
+    "II - Radio Format: When communicating on the radio, follow this format: [Role] (Text). For example: [Patrol] Cell Block is clear!",
+    "III - Door Management: Please remember NOT to leave doors open and NOT to use lethal force unnecessarily.",
+    "IV - Adherence: Maintain clear communication and follow the instructions of the host and co-host at all times.",
+    "h Dismissed to posts! Stay back for questions.",
+
+    // DRILL ANNOUNCEMENTS
+    "h We are initiating a Lockdown. All inmates must be escorted back to their cells immediately. During this lockdown, cuff abuse will not be noted. Do not enter the control-room.",
+    "We are experiencing an active Blackout. All inmates must be escorted to the cell-block immediately. Guards and staff are to stay within the cell-block as well. No personnel should be in the hallways during this blackout.",
+    "An evacuation is now in effect. Proceed to the Maximum Security Yard. All personnel must be at the checkpoint to comply with roleplay. Evacuate promptly and leave all prison doors open. Do not raid.",
+    "h The situation has been resolved. Facility operations have been resumed.",
+
+    // RETURN TO SESSION ROOM
+    "h Can everyone from the shift please report back to the session room. [Call 1/2]",
+    "h Can everyone from the shift please report back to the session room. [Call 2/2]",
+
+    // GROUP PHOTO AND RECOGNITION
+    "Welcome back, everyone! Before we announce the hardest workers, we’ll take a group photo. Please remain in STS formation during this time.",
+    "Now, let’s recognize the hardest workers. Everyone did a great job today, but these attendees stood out for their exceptional performance:",
+    "Thank you all for attending today’s shift. It’s been a pleasure being your host! Dismissed!",
+
+    // END OF SHIFT
+    "h The shift is now officially over! Passers, please type !rejoin to view your new ranks. All others are dismissed from the session room.",
+    "h EUA will be enforced. SR is PC+"
+];
+
+const trainingLines = [
+    // TRAINING ANNOUNCEMENTS
+    "h There's a Training being hosted in the session room, come and attend to show activity and possibly receive a promotion! [Call 1/3]",
+    "h There's a Training being hosted in the session room, come and attend to show activity and possibly receive a promotion! [Call 2/3]",
+    "h There's a Training being hosted in the session room, come and attend to show activity and possibly receive a promotion! [Call 3/3]",
+    "h There's a Training being hosted in the session room, come and attend to show activity and possibly receive a promotion! [Bonus [2/2]",
+    "h There's a Training being hosted in the session room, come and attend to show activity and possibly receive a promotion! [Bonus [2/2]",
+
+    // RULES
+    "I will now go over the rules for this training.",
+    "I – You must refer to me and my Co-Host by our ranks at all times.",
+    "II – Do not go AFK (Away From Keyboard) or say PTS (Permission To Speak) while I am speaking during this training. Doing so will result in a removal or a strike.",
+    "III – You must be respectful to everyone at all times. Failure to do so will result in removal from the training and possibly further sanctions.",
+    "IV – If there is any problem, come to me, my Co-Host, or any other SI+ for assistance. You must not ask for a promotion/rank, or you will be instantly removed.",
+    "V – Trolling in any form is unacceptable! Grammar must be used throughout this training. Trolling or failure to use grammar will result in a strike or instant removal from the training.",
+    "VI – PTS is active unless stated otherwise by me or my Co-Host.",
+
+    // FACES
+    "We will begin with the faces.",
+    "In this phase, we will be testing your reaction time and listening skills!",
+    "Please listen carefully, as I will only explain each face once. DO NOT actually do the faces at this point.",
+    "Left Face – Turn left 90 degrees from your current position.",
+    "Right Face – Turn right 90 degrees from your current position.",
+    "Center Face – Turn to your normal position (the position you are in right now).",
+    "About Face – Turn 180 degrees from your current position.",
+    "Control Face – Face the Host/Co-Host at all times (they should be in the middle of your screen at all times).",
+    "Please note: Only the center face breaks control face—any other face does not.",
+    "If you are sat, DO NOT jump unless I say so. Failure to follow this rule will result in a strike.",
+    "-Starting-",
+    "Ending. Do not jump",
+
+    // QUESTIONS
+    "We are now moving on to questions. In this phase, I’ll be testing you on your grammar and knowledge of the rules.",
+    "To start this off, I will send you a private message with the questions I will state shortly. DO NOT send your answers yet.",
+    "I will state the questions in Channel 2. DO NOT say the answers out loud—reply only to the PM.",
+    "What is Lethal Force used for?",
+    "What are handcuffs used for?",
+    "What is a taser used for?",
+    "What is a gun used for?",
+    "What are a few reasons you should put an inmate in Maximum Security?",
+    "What are a few reasons you should put an inmate in Solitary Confinement?",
+    "What is a reason to use the modcall system?",
+    "What would you do if you see someone breaking Roblox ToS?",
+    "What would you do if you see an abuser in-game?",
+    "You have 3 minutes, starting now!",
+
+    // SCENARIOS
+    "We are now moving onto Scenarios! In this phase, we are testing you on your knowledge of the rules, comprehension, grammar, and question correctness—along with your proficiency with equipment!",
+    "I will now state 3 important rules for this session.",
+    "1. DO NOT actually frisk or kill the inmates. (Use verbal commands like -frisks- instead.)",
+    "2. DO NOT step outside the pink box.",
+    "3. The tools permitted for this section are handcuffs, tasers, Glocks, and shields. The use of any other tools will result in failure.",
+    "Each of you will be tasked with an appropriate interaction demonstrated by the inmate. Your responses should follow the facility’s rules and guidelines.",
+    "Now, please split up into 2 equal groups on the lime instructional lines along the room.",
+
+    // SCENARIO LIST
+    "Inmate Shooting",
+    "Inmate Spamming",
+    "Inmate Disrespect",
+    "Using Keycard to Escape",
+    "Bypassed Audio/Boombox Abuse",
+    "Exploiting",
+    "Punching",
+    "Cross Teaming",
+    "Using Knife",
+    "Crossing the Red Line",
+    "Unauthorized Area",
+    "Escaping or Attempted Escape",
+    "AFK Farming",
+
+    // ACCURACY PHASE
+    "We are now moving on to the accuracy phase! In this section, we will evaluate your precision, aiming skills, listening abilities, and overall accuracy.",
+    "You are only allowed to use the Glock-17 for this phase, and you must stay behind the red line at all times. Failure to follow these rules will result in failing this phase.",
+    "Without further ado, please relocate to the blue instructional line behind the host’s instructional lines.",
+    "Knock your weapon!",
+    "Ready!",
+    "Aim!",
+    "Fire!",
+    "STS.",
+
+    // ENDING
+    "We have now completed all phases of the training! I will announce the passers shortly. During this time, you may chat among yourselves (PTS inactive).",
+    "If you have been promoted from this training, your cooldown will range from 3 days to 1 week. Please check with us if you’re unsure about your cooldown period!",
+    "This concludes our training session! It has been an honor and a pleasure to be your host today.",
+    "h The training is now over! Passers, please say !rejoin to view your new ranks! All dismissed from the session room!"
+];
+
+// LINE COPIER
+
+function createLine(tabName, text) {
+    const output = document.getElementById(tabName + "Output");
+    const row = document.createElement("div");
+    row.className = "line";
+
+    const lineText = document.createElement("div");
+    lineText.className = "line-text";
+    lineText.textContent = text;
+
+    const copyButton = document.createElement("button");
+    copyButton.textContent = "Copy";
+
+    copyButton.addEventListener("click", async () => {
+        try {
+            await copyText(text);
+            copyButton.textContent = "Copied!";
+            setTimeout(() => {
+                copyButton.textContent = "Copy";
+            }, 1200);
+        } catch (error) {
+            document.getElementById(tabName + "Status").textContent =
+                "Copy failed. Select and copy the text manually.";
+        }
+    });
+
+    row.appendChild(lineText);
+    row.appendChild(copyButton);
+    output.appendChild(row);
+
+    updateCount(tabName);
+}
+
+async function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+    }
+
+    const temporary = document.createElement("textarea");
+    temporary.value = text;
+    temporary.style.position = "fixed";
+    temporary.style.left = "-9999px";
+    document.body.appendChild(temporary);
+    temporary.select();
+
+    const successful = document.execCommand("copy");
+    temporary.remove();
+
+    if (!successful) {
+        throw new Error("Copy failed");
+    }
+}
+
+function addCustomLines(tabName) {
+    const input = document.getElementById(tabName + "Input");
+    const status = document.getElementById(tabName + "Status");
+
+    const lines = input.value
+        .split("\n")
+        .map(line => line.trim())
+        .filter(line => line.length > 0);
+
+    if (lines.length === 0) {
+        status.textContent = "Type one or more lines first.";
+        return;
+    }
+
+    lines.forEach(line => createLine(tabName, line));
+
+    input.value = "";
+    status.textContent = `Added ${lines.length} custom line(s).`;
+}
+
+function updateCount(tabName) {
+    const output = document.getElementById(tabName + "Output");
+    document.getElementById(tabName + "Count").textContent =
+        `${output.children.length} lines available`;
+}
+
+// TAB SWITCHING
+
+document.querySelectorAll(".tab").forEach(button => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(tab =>
+            tab.classList.remove("active")
+        );
+
+        document.querySelectorAll(".panel").forEach(panel =>
+            panel.classList.remove("active")
+        );
+
+        button.classList.add("active");
+        document.getElementById(button.dataset.tab).classList.add("active");
+    });
+});
+
+// DRILL TIMER
+
+let timerRemaining = 300;
+let timerInterval = null;
+let timerRunning = false;
+let timerDeadline = null;
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timerRemaining / 60);
+    const seconds = timerRemaining % 60;
+
+    document.getElementById("timerDisplay").textContent =
+        String(minutes).padStart(2, "0") + ":" +
+        String(seconds).padStart(2, "0");
+}
+
+function getSelectedDuration() {
+    const minutesInput = document.getElementById("timerMinutes");
+    const secondsInput = document.getElementById("timerSeconds");
+
+    const minutes = Number(minutesInput.value);
+    const seconds = Number(secondsInput.value);
+
+    if (
+        minutesInput.value.trim() === "" ||
+        secondsInput.value.trim() === "" ||
+        !Number.isInteger(minutes) ||
+        !Number.isInteger(seconds) ||
+        minutes < 0 ||
+        minutes > 999 ||
+        seconds < 0 ||
+        seconds > 59
+    ) {
+        document.getElementById("timerStatus").textContent =
+            "Enter valid minutes (0–999) and seconds (0–59).";
+        return null;
+    }
+
+    return minutes * 60 + seconds;
+}
+
+function startTimer() {
+    if (timerRunning) return;
+
+    if (timerRemaining <= 0) {
+        const selectedDuration = getSelectedDuration();
+
+        if (selectedDuration === null || selectedDuration <= 0) {
+            document.getElementById("timerStatus").textContent =
+                "Set a duration greater than zero.";
+            return;
+        }
+
+        timerRemaining = selectedDuration;
+        updateTimerDisplay();
+    }
+
+    timerRunning = true;
+    timerDeadline = Date.now() + timerRemaining * 1000;
+    document.getElementById("timerStatus").textContent = "Timer running";
+
+    timerInterval = setInterval(() => {
+        timerRemaining = Math.max(
+            0,
+            Math.ceil((timerDeadline - Date.now()) / 1000)
+        );
+
+        updateTimerDisplay();
+
+        if (timerRemaining <= 0) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timerRunning = false;
+            timerDeadline = null;
+
+            document.getElementById("timerStatus").textContent =
+                "Time is up!";
+            alert("Drill timer finished!");
+        }
+    }, 200);
+}
+
+function pauseTimer() {
+    if (timerRunning && timerDeadline !== null) {
+        timerRemaining = Math.max(
+            0,
+            Math.ceil((timerDeadline - Date.now()) / 1000)
+        );
+    }
+
+    if (timerInterval !== null) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    timerRunning = false;
+    timerDeadline = null;
+    updateTimerDisplay();
+
+    document.getElementById("timerStatus").textContent =
+        timerRemaining === 0 ? "Time is up!" : "Timer paused";
+}
+
+function resetTimer() {
+    if (timerInterval !== null) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    timerRunning = false;
+    timerDeadline = null;
+
+    const selectedDuration = getSelectedDuration();
+
+    if (selectedDuration === null) {
+        timerRemaining = 0;
+        updateTimerDisplay();
+        return;
+    }
+
+    timerRemaining = selectedDuration;
+    updateTimerDisplay();
+
+    document.getElementById("timerStatus").textContent =
+        "Ready to start";
+}
+
+document.getElementById("timerMinutes").addEventListener("change", resetTimer);
+document.getElementById("timerSeconds").addEventListener("change", resetTimer);
+
+// LOAD DEFAULT LINES
+
+shiftLines.forEach(line => createLine("shift", line));
+trainingLines.forEach(line => createLine("training", line));
+
+updateTimerDisplay();
+</script>
+
+</body>
+</html>
