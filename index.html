@@ -7,150 +7,227 @@
 <title>Stateview Line Copier</title>
 
 <style>
-    * { box-sizing: border-box; }
+* { box-sizing: border-box; }
 
-    body {
-        background: #10131a;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 22px;
-    }
+body {
+    background: #10131a;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 22px;
+}
 
-    h1 {
-        text-align: center;
-        color: #48aaff;
-        margin-bottom: 8px;
-    }
+h1 {
+    text-align: center;
+    color: #48aaff;
+    margin-bottom: 8px;
+}
 
-    .subtitle {
-        text-align: center;
-        color: #b8c3d6;
-        margin-bottom: 25px;
-    }
+.subtitle {
+    text-align: center;
+    color: #b8c3d6;
+    margin-bottom: 25px;
+}
 
-    .tabs {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        margin: 20px auto 25px;
-        max-width: 900px;
-    }
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px auto 25px;
+    max-width: 900px;
+}
 
-    .tab {
-        flex: 1;
-        max-width: 250px;
-        padding: 14px;
-        background: #1b202b;
-        border: 1px solid #38465d;
-        color: #c6d2e5;
-        font-size: 17px;
-        border-radius: 8px;
-    }
+.tab {
+    flex: 1;
+    max-width: 250px;
+    padding: 14px;
+    background: #1b202b;
+    border: 1px solid #38465d;
+    color: #c6d2e5;
+    font-size: 17px;
+    border-radius: 8px;
+}
 
-    .tab.active {
-        background: #1687e8;
-        border-color: #1687e8;
-        color: white;
-    }
+.tab.active {
+    background: #1687e8;
+    border-color: #1687e8;
+    color: white;
+}
 
-    .panel {
-        display: none;
-        max-width: 900px;
-        margin: auto;
-    }
+.panel {
+    display: none;
+    max-width: 900px;
+    margin: auto;
+}
 
-    .panel.active {
-        display: block;
-    }
+.panel.active { display: block; }
 
-    .panel h2 {
-        color: #48aaff;
-        margin-top: 0;
-    }
+.panel h2 {
+    color: #48aaff;
+    margin-top: 0;
+}
 
-    textarea {
-        display: block;
-        width: 100%;
-        min-height: 100px;
-        background: #1b202b;
-        color: white;
-        border: 1px solid #38465d;
-        border-radius: 8px;
-        padding: 12px;
-        font-size: 15px;
-        resize: vertical;
-    }
+textarea {
+    display: block;
+    width: 100%;
+    min-height: 100px;
+    background: #1b202b;
+    color: white;
+    border: 1px solid #38465d;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 15px;
+    resize: vertical;
+}
 
-    button {
-        background: #1687e8;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        padding: 10px 14px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-    }
+button {
+    background: #1687e8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.15s;
+}
 
-    button:hover {
-        background: #086bc0;
-    }
+button:hover { background: #086bc0; }
 
-    .generate {
-        margin-top: 10px;
-        width: 100%;
-        padding: 13px;
-        font-size: 16px;
-    }
+.generate {
+    margin-top: 10px;
+    width: 100%;
+    padding: 13px;
+    font-size: 16px;
+}
+
+.line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #1b202b;
+    border: 1px solid #303b4d;
+    border-radius: 8px;
+    padding: 13px;
+    margin-bottom: 10px;
+}
+
+.line-text {
+    flex: 1;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.5;
+}
+
+.copy-status {
+    color: #70e6a1;
+    font-size: 13px;
+    min-height: 16px;
+}
+
+.count {
+    color: #b8c3d6;
+    font-size: 13px;
+    margin: 12px 0;
+}
+
+/* BLUE AND BLACK DRILL TIMER */
+
+.drill-timer {
+    background: #151a24;
+    border: 1px solid #1687e8;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0 25px;
+    box-shadow: 0 0 12px rgba(22, 135, 232, 0.12);
+}
+
+.drill-timer h3 {
+    color: #48aaff;
+    margin-top: 0;
+}
+
+.drill-timer p {
+    line-height: 1.5;
+    color: #d8e2f1;
+}
+
+.drill-timer hr {
+    border: none;
+    border-top: 1px solid #303b4d;
+    margin: 20px 0;
+}
+
+.timer-settings {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.timer-settings label { color: #b8c3d6; }
+
+.timer-settings input {
+    width: 78px;
+    background: #10131a;
+    color: #fff;
+    border: 1px solid #38465d;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#timerDisplay {
+    font-size: clamp(42px, 9vw, 64px);
+    font-weight: bold;
+    color: #48aaff;
+    background: #0c1017;
+    border: 1px solid #303b4d;
+    border-radius: 8px;
+    text-align: center;
+    padding: 16px 10px;
+    margin: 18px 0;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 3px;
+}
+
+.timer-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.timer-buttons button {
+    flex: 1;
+    min-width: 90px;
+    padding: 12px;
+}
+
+#timerStatus {
+    color: #48aaff;
+    margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+    body { padding: 12px; }
 
     .line {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        background: #1b202b;
-        border: 1px solid #303b4d;
-        border-radius: 8px;
-        padding: 13px;
-        margin-bottom: 10px;
+        align-items: flex-start;
+        flex-direction: column;
     }
 
-    .line-text {
-        flex: 1;
-        white-space: pre-wrap;
-        overflow-wrap: anywhere;
-        line-height: 1.5;
-    }
+    .line button { width: 100%; }
 
-    .copy-status {
-        color: #70e6a1;
-        font-size: 13px;
-        min-height: 16px;
-    }
-
-    .count {
-        color: #b8c3d6;
-        font-size: 13px;
-        margin: 12px 0;
-    }
-
-    @media (max-width: 600px) {
-        body { padding: 12px; }
-
-        .line {
-            align-items: flex-start;
-            flex-direction: column;
-        }
-
-        .line button { width: 100%; }
-    }
+    .timer-settings { align-items: center; }
+}
 </style>
 </head>
 
 <body>
 
 <h1>Stateview Line Copier</h1>
-<p class="subtitle">Made by Leadguitarhero. Last Update: 10/19/2026</p>
+<p class="subtitle">Choose a tab, find your line, and click Copy.</p>
 
 <div class="tabs">
     <button class="tab active" data-tab="shift">Shift</button>
@@ -170,7 +247,41 @@
 
     <p id="shiftStatus" class="copy-status"></p>
     <p id="shiftCount" class="count"></p>
+
     <div id="shiftOutput"></div>
+
+    <!-- TIMER: INSERTED BETWEEN EVACUATION AND RESOLUTION -->
+    <div id="drillTimer" class="drill-timer">
+        <h3>Drill Duration Guide</h3>
+
+        <p><strong>Lockdown Drill:</strong> 4–6 minutes.</p>
+        <p><strong>Blackout Drill:</strong> 4–6 minutes.</p>
+        <p><strong>Evacuation Drill:</strong> 5–7 minutes.</p>
+
+        <hr>
+
+        <h3>Adjustable Drill Timer</h3>
+
+        <div class="timer-settings">
+            <label for="timerMinutes">Minutes:</label>
+            <input id="timerMinutes" type="number"
+                   min="0" max="999" value="5">
+
+            <label for="timerSeconds">Seconds:</label>
+            <input id="timerSeconds" type="number"
+                   min="0" max="59" value="0">
+        </div>
+
+        <div id="timerDisplay">05:00</div>
+
+        <div class="timer-buttons">
+            <button onclick="startTimer()">Start</button>
+            <button onclick="pauseTimer()">Pause</button>
+            <button onclick="resetTimer()">Reset</button>
+        </div>
+
+        <p id="timerStatus" aria-live="polite">Ready to start</p>
+    </div>
 </section>
 
 <!-- TRAINING TAB -->
@@ -186,6 +297,7 @@
 
     <p id="trainingStatus" class="copy-status"></p>
     <p id="trainingCount" class="count"></p>
+
     <div id="trainingOutput"></div>
 </section>
 
@@ -226,16 +338,10 @@ const shiftLines = [
     "IV - Adherence: Maintain clear communication and follow the instructions of the host and co-host at all times.",
     "h Dismissed to posts! Stay back for questions.",
 
-    // LOCKDOWN ANNOUNCEMENT
+    // DRILL ANNOUNCEMENTS
     "h We are initiating a Lockdown. All inmates must be escorted back to their cells immediately. During this lockdown, cuff abuse will not be noted. Do not enter the control-room.",
-
-    // BLACKOUT ANNOUNCEMENT
     "We are experiencing an active Blackout. All inmates must be escorted to the cell-block immediately. Guards and staff are to stay within the cell-block as well. No personnel should be in the hallways during this blackout.",
-
-    // EVACUATION ANNOUNCEMENT
     "An evacuation is now in effect. Proceed to the Maximum Security Yard. All personnel must be at the checkpoint to comply with roleplay. Evacuate promptly and leave all prison doors open. Do not raid.",
-
-    // RESOLUTION
     "h The situation has been resolved. Facility operations have been resumed.",
 
     // RETURN TO SESSION ROOM
@@ -339,7 +445,8 @@ const trainingLines = [
     "h The training is now over! Passers, please say !rejoin to view your new ranks! All dismissed from the session room!"
 ];
 
-// Create a copyable row.
+// LINE COPIER
+
 function createLine(tabName, text) {
     const output = document.getElementById(tabName + "Output");
     const row = document.createElement("div");
@@ -356,10 +463,12 @@ function createLine(tabName, text) {
         try {
             await copyText(text);
             copyButton.textContent = "Copied!";
-            setTimeout(() => copyButton.textContent = "Copy", 1200);
+            setTimeout(() => {
+                copyButton.textContent = "Copy";
+            }, 1200);
         } catch (error) {
             document.getElementById(tabName + "Status").textContent =
-                "Copy failed. Try selecting the text and copying it manually.";
+                "Copy failed. Select and copy the text manually.";
         }
     });
 
@@ -368,9 +477,16 @@ function createLine(tabName, text) {
     output.appendChild(row);
 
     updateCount(tabName);
+
+    // Place the timer after the evacuation announcement.
+    if (
+        tabName === "shift" &&
+        text.startsWith("An evacuation is now in effect.")
+    ) {
+        output.appendChild(document.getElementById("drillTimer"));
+    }
 }
 
-// Copy text, with a fallback for local HTML files.
 async function copyText(text) {
     if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(text);
@@ -390,7 +506,6 @@ async function copyText(text) {
     if (!successful) throw new Error("Copy failed");
 }
 
-// Add custom lines without clearing existing lines.
 function addCustomLines(tabName) {
     const input = document.getElementById(tabName + "Input");
     const status = document.getElementById(tabName + "Status");
@@ -411,14 +526,14 @@ function addCustomLines(tabName) {
     status.textContent = `Added ${lines.length} custom line(s).`;
 }
 
-// Update the number of lines in each tab.
 function updateCount(tabName) {
     const output = document.getElementById(tabName + "Output");
     document.getElementById(tabName + "Count").textContent =
-        `${output.children.length} lines available`;
+        `${output.querySelectorAll(".line").length} lines available`;
 }
 
-// Switch between Shift and Training.
+// TAB SWITCHING
+
 document.querySelectorAll(".tab").forEach(button => {
     button.addEventListener("click", () => {
         document.querySelectorAll(".tab").forEach(tab =>
@@ -434,9 +549,137 @@ document.querySelectorAll(".tab").forEach(button => {
     });
 });
 
-// Load both sets of default lines.
+// DRILL TIMER
+
+let timerRemaining = 300;
+let timerInterval = null;
+let timerRunning = false;
+let timerDeadline = null;
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timerRemaining / 60);
+    const seconds = timerRemaining % 60;
+
+    document.getElementById("timerDisplay").textContent =
+        String(minutes).padStart(2, "0") + ":" +
+        String(seconds).padStart(2, "0");
+}
+
+function getSelectedDuration() {
+    const minutesInput = document.getElementById("timerMinutes");
+    const secondsInput = document.getElementById("timerSeconds");
+
+    const minutes = Number(minutesInput.value);
+    const seconds = Number(secondsInput.value);
+
+    if (
+        minutesInput.value.trim() === "" ||
+        secondsInput.value.trim() === "" ||
+        !Number.isInteger(minutes) ||
+        !Number.isInteger(seconds) ||
+        minutes < 0 || minutes > 999 ||
+        seconds < 0 || seconds > 59
+    ) {
+        document.getElementById("timerStatus").textContent =
+            "Enter valid minutes (0–999) and seconds (0–59).";
+        return null;
+    }
+
+    return minutes * 60 + seconds;
+}
+
+function startTimer() {
+    if (timerRunning) return;
+
+    if (timerRemaining <= 0) {
+        const duration = getSelectedDuration();
+
+        if (duration === null || duration <= 0) {
+            document.getElementById("timerStatus").textContent =
+                "Set a duration greater than zero.";
+            return;
+        }
+
+        timerRemaining = duration;
+        updateTimerDisplay();
+    }
+
+    timerRunning = true;
+    timerDeadline = Date.now() + timerRemaining * 1000;
+    document.getElementById("timerStatus").textContent = "Timer running";
+
+    timerInterval = setInterval(() => {
+        timerRemaining = Math.max(
+            0,
+            Math.ceil((timerDeadline - Date.now()) / 1000)
+        );
+
+        updateTimerDisplay();
+
+        if (timerRemaining <= 0) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timerRunning = false;
+            timerDeadline = null;
+
+            document.getElementById("timerStatus").textContent = "Time is up!";
+            alert("Drill timer finished!");
+        }
+    }, 200);
+}
+
+function pauseTimer() {
+    if (timerRunning && timerDeadline !== null) {
+        timerRemaining = Math.max(
+            0,
+            Math.ceil((timerDeadline - Date.now()) / 1000)
+        );
+    }
+
+    if (timerInterval !== null) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    timerRunning = false;
+    timerDeadline = null;
+    updateTimerDisplay();
+
+    document.getElementById("timerStatus").textContent =
+        timerRemaining === 0 ? "Time is up!" : "Timer paused";
+}
+
+function resetTimer() {
+    if (timerInterval !== null) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+
+    timerRunning = false;
+    timerDeadline = null;
+
+    const duration = getSelectedDuration();
+
+    if (duration === null) {
+        timerRemaining = 0;
+        updateTimerDisplay();
+        return;
+    }
+
+    timerRemaining = duration;
+    updateTimerDisplay();
+    document.getElementById("timerStatus").textContent = "Ready to start";
+}
+
+document.getElementById("timerMinutes").addEventListener("change", resetTimer);
+document.getElementById("timerSeconds").addEventListener("change", resetTimer);
+
+// LOAD DEFAULT LINES
+
 shiftLines.forEach(line => createLine("shift", line));
 trainingLines.forEach(line => createLine("training", line));
+
+updateTimerDisplay();
 </script>
 
 </body>
